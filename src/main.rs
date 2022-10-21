@@ -1,4 +1,5 @@
 use nalgebra as na;
+use opengl::{Program, RenderObject, Shader};
 
 extern crate gl;
 extern crate sdl2;
@@ -25,6 +26,10 @@ fn main() {
 
     let color_buffer = opengl::ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
     color_buffer.set_used(&gl);
+    let vert_shader = Shader::from_vert_source(&gl, "assets/triangle.vert").unwrap();
+    let frag_shader = Shader::from_frag_source(&gl, "assets/triangle.frag").unwrap();
+    let program = Program::from_shaders(&gl, &[vert_shader, frag_shader]).unwrap();
+    let triangle = RenderObject::new(program, &gl).unwrap();
 
     let mut viewport = opengl::Viewport::for_window(900, 700);
     let mut event_pump = sdl.event_pump().unwrap();
@@ -43,7 +48,7 @@ fn main() {
             }
         }
         color_buffer.clear(&gl);
-        // Render stuff
+        triangle.render(&gl);
         window.gl_swap_window();
     }
 }
