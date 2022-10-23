@@ -4,6 +4,7 @@ use opengl::{Program, RenderObject, Shader};
 extern crate gl;
 extern crate sdl2;
 
+mod geometry;
 pub mod opengl;
 
 fn main() {
@@ -29,7 +30,8 @@ fn main() {
     let vert_shader = Shader::from_vert_source(&gl, "assets/triangle.vert").unwrap();
     let frag_shader = Shader::from_frag_source(&gl, "assets/triangle.frag").unwrap();
     let program = Program::from_shaders(&gl, &[vert_shader, frag_shader]).unwrap();
-    let triangle = RenderObject::new(program, &gl).unwrap();
+    let vertices = geometry::cube(1.0, (1.0, 0.0, 0.0));
+    let triangle = RenderObject::new(program, &gl, vertices).unwrap();
 
     let mut viewport = opengl::Viewport::for_window(900, 700);
     let mut event_pump = sdl.event_pump().unwrap();

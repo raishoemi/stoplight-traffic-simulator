@@ -5,18 +5,11 @@ pub struct RenderObject {
     program: Program,
     _vbo: Buffer,
     vao: VertexArray,
+    triangles_count: u32
 }
 
 impl RenderObject {
-    pub fn new(program: Program, gl: &gl::Gl) -> Result<Self, String> {
-        let vertices: Vec<f32> = vec![
-            -0.5, -0.5, 0.0,
-            1.0, 0.0, 0.0,
-            0.5, -0.5, 0.0,
-            0.0, 1.0, 0.0,
-            0.0, 0.5, 0.0,
-            0.0, 0.0, 1.0
-        ];
+    pub fn new(program: Program, gl: &gl::Gl, vertices: Vec<f32>) -> Result<Self, String> {
         let vbo = Buffer::new(&gl);
         vbo.bind();
         vbo.set_buffer_data(&vertices);
@@ -50,12 +43,13 @@ impl RenderObject {
             program,
             _vbo: vbo,
             vao,
+            triangles_count: ((vertices.len() / 6) as u32)
         })
     }
 
     pub fn render(&self, gl: &gl::Gl) {
         self.program.set_used();
         self.vao.bind();
-        unsafe { gl.DrawArrays(gl::TRIANGLES, 0, 3) }
+        unsafe { gl.DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
     }
 }
