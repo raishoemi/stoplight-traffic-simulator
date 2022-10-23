@@ -67,6 +67,29 @@ impl VertexArray {
     pub fn unbind(&self) {
         unsafe { self.gl.BindVertexArray(0) }
     }
+
+    pub fn enable_vertex_attribs(&self) {
+        unsafe {
+            self.gl.EnableVertexAttribArray(0);
+            self.gl.VertexAttribPointer(
+                0 as gl::types::GLuint,
+                3,
+                gl::FLOAT,
+                gl::FALSE,
+                (std::mem::size_of::<f32>() * 6) as gl::types::GLint,
+                std::ptr::null(),
+            );
+            self.gl.EnableVertexAttribArray(1);
+            self.gl.VertexAttribPointer(
+                1 as gl::types::GLuint,
+                3,
+                gl::FLOAT,
+                gl::FALSE,
+                (std::mem::size_of::<f32>() * 6) as gl::types::GLint,
+                (std::mem::size_of::<f32>() * 3) as *const gl::types::GLvoid,
+            );
+        }
+    }
 }
 
 impl Drop for VertexArray {

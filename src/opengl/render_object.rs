@@ -17,26 +17,7 @@ impl RenderObject {
         let vao = VertexArray::new(&gl);
         vao.bind();
         vbo.bind();
-        unsafe {
-            gl.EnableVertexAttribArray(0);
-            gl.VertexAttribPointer(
-                0 as gl::types::GLuint,
-                3,
-                gl::FLOAT,
-                gl::FALSE,
-                (std::mem::size_of::<f32>() * 6) as gl::types::GLint,
-                std::ptr::null()
-            );
-            gl.EnableVertexAttribArray(1);
-            gl.VertexAttribPointer(
-                1 as gl::types::GLuint,
-                3,
-                gl::FLOAT,
-                gl::FALSE,
-                (std::mem::size_of::<f32>() * 6) as gl::types::GLint,
-                (std::mem::size_of::<f32>() * 3) as *const gl::types::GLvoid,
-            );
-        }
+        vao.enable_vertex_attribs();
         vbo.unbind();
         vao.unbind();
         Ok(RenderObject {
