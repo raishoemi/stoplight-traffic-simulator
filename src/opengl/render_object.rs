@@ -9,7 +9,9 @@ pub struct RenderObject {
 }
 
 impl RenderObject {
-    pub fn new(program: Program, gl: &gl::Gl, vertices: Vec<f32>) -> Result<Self, String> {
+    pub fn new(program: Program, gl: &gl::Gl, vertices: Vec<f32>, color: nalgebra::Vector4<f32>) -> Result<Self, String> {
+        program.set_used();
+        program.set_color_uniform(color);
         let vbo = Buffer::new(&gl);
         vbo.bind();
         vbo.set_buffer_data(&vertices);
@@ -24,7 +26,7 @@ impl RenderObject {
             program,
             _vbo: vbo,
             vao,
-            triangles_count: ((vertices.len() / 6) as u32)
+            triangles_count: ((vertices.len() / 3) as u32)
         })
     }
 
