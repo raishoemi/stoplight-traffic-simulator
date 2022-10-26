@@ -25,11 +25,15 @@ impl Buffer {
         unsafe { self.gl.BindBuffer(gl::ARRAY_BUFFER, 0) }
     }
 
-    pub fn set_buffer_data<T>(&self, data: &[T]) {
+    pub fn set_buffer_data<T>(&self, data: &[T], triangles_count: Option<usize>) {
+        let data_len = match triangles_count {
+            None => data.len(),
+            Some(x) => (x * 3) as usize,
+        };
         unsafe {
             self.gl.BufferData(
                 gl::ARRAY_BUFFER,
-                (data.len() * std::mem::size_of::<T>()) as gl::types::GLsizeiptr,
+                (data_len * std::mem::size_of::<T>()) as gl::types::GLsizeiptr,
                 data.as_ptr() as *const gl::types::GLvoid,
                 gl::STATIC_DRAW,
             )

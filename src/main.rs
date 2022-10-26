@@ -1,5 +1,5 @@
 use nalgebra as na;
-use opengl::{Program, RenderObject, Shader};
+use opengl::{RenderObject};
 
 extern crate gl;
 extern crate sdl2;

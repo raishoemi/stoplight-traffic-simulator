@@ -5,51 +5,51 @@ pub fn cube(length: f32) -> Vec<f32> {
     vertices.extend(vec![
         -half_len, half_len, half_len, half_len, half_len, half_len, half_len, -half_len, half_len,
     ]);
-    // vertices.extend(vec![
-    //     half_len, -half_len, half_len, -half_len, -half_len, half_len, -half_len, half_len,
-    //     half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     -half_len, half_len, -half_len, half_len, half_len, -half_len, half_len, -half_len,
-    //     -half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     half_len, -half_len, -half_len, -half_len, -half_len, -half_len, -half_len, half_len,
-    //     -half_len,
-    // ]);
+    vertices.extend(vec![
+        half_len, -half_len, half_len, -half_len, -half_len, half_len, -half_len, half_len,
+        half_len,
+    ]);
+    vertices.extend(vec![
+        -half_len, half_len, -half_len, half_len, half_len, -half_len, half_len, -half_len,
+        -half_len,
+    ]);
+    vertices.extend(vec![
+        half_len, -half_len, -half_len, -half_len, -half_len, -half_len, -half_len, half_len,
+        -half_len,
+    ]);
 
     // sides
-    // vertices.extend(vec![
-    //     half_len, half_len, half_len, half_len, half_len, -half_len, half_len, -half_len, half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     half_len, -half_len, -half_len, half_len, -half_len, half_len, half_len, half_len,
-    //     -half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     -half_len, half_len, half_len, -half_len, half_len, -half_len, -half_len, -half_len,
-    //     half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     -half_len, -half_len, -half_len, -half_len, -half_len, half_len, -half_len, half_len,
-    //     -half_len,
-    // ]);
+    vertices.extend(vec![
+        half_len, half_len, half_len, half_len, half_len, -half_len, half_len, -half_len, half_len,
+    ]);
+    vertices.extend(vec![
+        half_len, -half_len, -half_len, half_len, -half_len, half_len, half_len, half_len,
+        -half_len,
+    ]);
+    vertices.extend(vec![
+        -half_len, half_len, half_len, -half_len, half_len, -half_len, -half_len, -half_len,
+        half_len,
+    ]);
+    vertices.extend(vec![
+        -half_len, -half_len, -half_len, -half_len, -half_len, half_len, -half_len, half_len,
+        -half_len,
+    ]);
 
     // bottom-top
-    // vertices.extend(vec![
-    //     half_len, half_len, half_len, half_len, half_len, -half_len, -half_len, half_len, half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     -half_len, half_len, -half_len, half_len, half_len, -half_len, -half_len, half_len,
-    //     half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     half_len, -half_len, half_len, half_len, -half_len, -half_len, -half_len, -half_len,
-    //     half_len,
-    // ]);
-    // vertices.extend(vec![
-    //     -half_len, -half_len, -half_len, half_len, -half_len, -half_len, -half_len, -half_len,
-    //     half_len,
-    // ]);
+    vertices.extend(vec![
+        half_len, half_len, half_len, half_len, half_len, -half_len, -half_len, half_len, half_len,
+    ]);
+    vertices.extend(vec![
+        -half_len, half_len, -half_len, half_len, half_len, -half_len, -half_len, half_len,
+        half_len,
+    ]);
+    vertices.extend(vec![
+        half_len, -half_len, half_len, half_len, -half_len, -half_len, -half_len, -half_len,
+        half_len,
+    ]);
+    vertices.extend(vec![
+        -half_len, -half_len, -half_len, half_len, -half_len, -half_len, -half_len, -half_len,
+        half_len,
+    ]);
     vertices
 }

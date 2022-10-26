@@ -3,9 +3,8 @@ use super::{Program, Shader};
 
 pub struct RenderObject {
     program: Program,
-    _vbo: Buffer,
     vao: VertexArray,
-    triangles_count: u32
+    triangles_count: usize
 }
 
 impl RenderObject {
@@ -13,11 +12,12 @@ impl RenderObject {
         let vert_shader = Shader::from_vert_source(&gl, "assets/triangle.vert").expect("Failed to load vertex shader");
         let frag_shader = Shader::from_frag_source(&gl, "assets/triangle.frag").expect("Failed to load fragment shader");
         let program = Program::from_shaders(&gl, &[vert_shader, frag_shader]).expect("Failed to create program from shaders");
+        let triangles_count = vertices.len() / 3;
         program.set_used();
         program.set_color_uniform(color);
         let vbo = Buffer::new(&gl);
         vbo.bind();
-        vbo.set_buffer_data(&vertices);
+        vbo.set_buffer_data(&vertices, Some(triangles_count));
         vbo.unbind();
         let vao = VertexArray::new(&gl);
         vao.bind();
@@ -27,9 +27,8 @@ impl RenderObject {
         vao.unbind();
         Ok(RenderObject {
             program,
-            _vbo: vbo,
             vao,
-            triangles_count: ((vertices.len() / 3) as u32)
+            triangles_count
         })
     }
 
