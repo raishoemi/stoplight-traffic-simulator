@@ -1,5 +1,5 @@
 use super::buffer::{Buffer, VertexArray};
-use super::Program;
+use super::{Program, Shader};
 
 pub struct RenderObject {
     program: Program,
@@ -9,7 +9,10 @@ pub struct RenderObject {
 }
 
 impl RenderObject {
-    pub fn new(program: Program, gl: &gl::Gl, vertices: Vec<f32>, color: nalgebra::Vector4<f32>) -> Result<Self, String> {
+    pub fn new(gl: &gl::Gl, vertices: Vec<f32>, color: nalgebra::Vector4<f32>) -> Result<Self, String> {
+        let vert_shader = Shader::from_vert_source(&gl, "assets/triangle.vert").expect("Failed to load vertex shader");
+        let frag_shader = Shader::from_frag_source(&gl, "assets/triangle.frag").expect("Failed to load fragment shader");
+        let program = Program::from_shaders(&gl, &[vert_shader, frag_shader]).expect("Failed to create program from shaders");
         program.set_used();
         program.set_color_uniform(color);
         let vbo = Buffer::new(&gl);

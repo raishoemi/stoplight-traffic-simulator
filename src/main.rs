@@ -27,17 +27,9 @@ fn main() {
 
     let color_buffer = opengl::ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
     color_buffer.set_used(&gl);
-    let vert_shader = Shader::from_vert_source(&gl, "assets/triangle.vert").unwrap();
-    let frag_shader = Shader::from_frag_source(&gl, "assets/triangle.frag").unwrap();
-    let program = Program::from_shaders(&gl, &[vert_shader, frag_shader]).unwrap();
     let vertices = geometry::cube(1.0);
-    let triangle = RenderObject::new(
-        program,
-        &gl,
-        vertices,
-        na::Vector4::from([0.7, 0.5, 0.3, 0.3]),
-    )
-    .unwrap();
+    let triangle =
+        RenderObject::new(&gl, vertices, na::Vector4::from([0.7, 0.5, 0.3, 0.3])).unwrap();
 
     let mut viewport = opengl::Viewport::for_window(900, 700);
     let mut event_pump = sdl.event_pump().unwrap();
