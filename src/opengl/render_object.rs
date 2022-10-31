@@ -2,12 +2,18 @@ use super::buffer::{Buffer, VertexArray};
 use super::{Program, Shader};
 
 const COLOR_UNIFORM_NAME: &str = "colorUniform\0";
+const MODEL_UNIFORM_NAME: &str = "modelUniform\0";
+const VIEW_UNIFORM_NAME: &str = "viewUniform\0";
+const PROJECTION_UNIFORM_NAME: &str = "projectionUniform\0";
 
 pub struct RenderObject {
     program: Program,
     vao: VertexArray,
     triangles_count: usize,
     color_uniform: gl::types::GLint,
+    model_uniform: gl::types::GLint,
+    view_uniform: gl::types::GLint,
+    projection_uniform: gl::types::GLint,
 }
 
 impl RenderObject {
@@ -27,7 +33,22 @@ impl RenderObject {
         let color_uniform = program.get_uniform_location(
             COLOR_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar
         );
-        program.set_v4_uniform_value(color_uniform, color);
+        let model_uniform = program.get_uniform_location(
+            MODEL_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar
+        );
+        let view_uniform = program.get_uniform_location(
+            VIEW_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar
+        );
+        let projection_uniform = program.get_uniform_location(
+            PROJECTION_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar,
+        );
+        program.set_4f_uniform_value(color_uniform, color);
+        program.set_4fv_uniform_value(model_uniform, nalgebra::Matrix4::<f32>::identity());
+        program.set_4fv_uniform_value(view_uniform, nalgebra::Matrix4::<f32>::identity());
+        program.set_4fv_uniform_value(
+            projection_uniform,
+            nalgebra::Matrix4::<f32>::new_orthographic(-10.0, 10.0, -10.0, 10.0, -10.0, 10.0),
+        );
         let vbo = Buffer::new(&gl);
         vbo.bind();
         vbo.set_buffer_data(&vertices, Some(triangles_count));
@@ -43,11 +64,29 @@ impl RenderObject {
             vao,
             triangles_count,
             color_uniform,
+            model_uniform,
+            view_uniform,
+            projection_uniform,
         })
     }
 
     pub fn set_color(&self, color: nalgebra::Vector4<f32>) {
-        self.program.set_v4_uniform_value(self.color_uniform, color);
+        self.program.set_4f_uniform_value(self.color_uniform, color);
+    }
+
+    pub fn set_model_matrix(&self, matrix: nalgebra::Matrix4<f32>) {
+        self.program
+            .set_4fv_uniform_value(self.model_uniform, matrix);
+    }
+
+    pub fn set_view_matrix(&self, matrix: nalgebra::Matrix4<f32>) {
+        self.program
+            .set_4fv_uniform_value(self.view_uniform, matrix);
+    }
+
+    pub fn set_projection_matrix(&self, matrix: nalgebra::Matrix4<f32>) {
+        self.program
+            .set_4fv_uniform_value(self.projection_uniform, matrix);
     }
 
     pub fn render(&self, gl: &gl::Gl) {

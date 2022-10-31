@@ -56,7 +56,7 @@ impl Program {
         }
     }
 
-    pub fn set_v4_uniform_value(
+    pub fn set_4f_uniform_value(
         &self,
         uniform_location: gl::types::GLint,
         value: nalgebra::Vector4<f32>,
@@ -64,6 +64,17 @@ impl Program {
         unsafe {
             self.gl
                 .Uniform4f(uniform_location, value.x, value.y, value.z, value.w);
+        }
+    }
+
+    pub fn set_4fv_uniform_value(
+        &self,
+        uniform_location: gl::types::GLint,
+        value: nalgebra::Matrix4<f32>,
+    ) {
+        unsafe {
+            self.gl
+                .UniformMatrix4fv(uniform_location, 1, gl::FALSE, value.as_ptr());
         }
     }
 

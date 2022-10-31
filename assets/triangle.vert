@@ -1,14 +1,12 @@
 #version 330 core
 
 layout (location = 0) in vec3 position;
-// layout (location = 1) in vec3 color;
 
-// out VS_OUTPUT {
-//     vec3 Color;
-// } OUT;
+uniform mat4 modelUniform;
+uniform mat4 viewUniform;
+uniform mat4 projectionUniform;
 
 void main()
 {
-    gl_Position = vec4(position, 1.0);
-    // OUT.Color = color;
+    gl_Position = projectionUniform * viewUniform * modelUniform * vec4(position, 1.0);
 }
