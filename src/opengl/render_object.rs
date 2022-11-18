@@ -1,3 +1,5 @@
+use nalgebra::Vector3;
+
 use super::buffer::{Buffer, VertexArray};
 use super::{Program, Shader};
 
@@ -43,11 +45,12 @@ impl RenderObject {
             PROJECTION_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar,
         );
         program.set_4f_uniform_value(color_uniform, color);
-        program.set_4fv_uniform_value(model_uniform, nalgebra::Matrix4::<f32>::identity());
-        program.set_4fv_uniform_value(view_uniform, nalgebra::Matrix4::<f32>::identity());
+        let translated_model = RenderObject::get_translation_matrix(nalgebra::Vector3::new(0.0, 0.0, 3.0));
+        program.set_4fv_uniform_value(model_uniform, translated_model);
+        program.set_4fv_uniform_value(view_uniform, nalgebra::Matrix4::from_diagonal(&nalgebra::Vector4::new(1.0, 1.0, -2.0, 1.0)));
         program.set_4fv_uniform_value(
             projection_uniform,
-            nalgebra::Matrix4::<f32>::new_orthographic(-10.0, 10.0, -10.0, 10.0, -10.0, 10.0),
+            *nalgebra::Perspective3::new(16.0 / 9.0, 3.14 / 4.0, 0.1, 15.0).as_matrix(),
         );
         let vbo = Buffer::new(&gl);
         vbo.bind();
@@ -93,5 +96,14 @@ impl RenderObject {
         self.program.set_used();
         self.vao.bind();
         unsafe { gl.DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
+    }
+
+    pub fn get_translation_matrix(offset: Vector3<f32>) ->  nalgebra::Matrix4<f32> {
+        // See https://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
+        let mut identity = nalgebra::Matrix4::identity();
+        identity.m14 = offset.x;
+        identity.m24 = offset.y;
+        identity.m34 = offset.z;
+        identity
     }
 }
