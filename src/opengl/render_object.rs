@@ -15,7 +15,7 @@ pub struct RenderObject {
     color_uniform: gl::types::GLint,
     model_uniform: gl::types::GLint,
     view_uniform: gl::types::GLint,
-    projection_uniform: gl::types::GLint,
+    _projection_uniform: gl::types::GLint,
 }
 
 impl RenderObject {
@@ -45,9 +45,13 @@ impl RenderObject {
             PROJECTION_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar,
         );
         program.set_4f_uniform_value(color_uniform, color);
-        let translated_model = RenderObject::get_translation_matrix(nalgebra::Vector3::new(0.0, 0.0, 3.0));
+        let translated_model =
+            RenderObject::get_translation_matrix(nalgebra::Vector3::new(0.0, 0.0, 3.0));
         program.set_4fv_uniform_value(model_uniform, translated_model);
-        program.set_4fv_uniform_value(view_uniform, nalgebra::Matrix4::from_diagonal(&nalgebra::Vector4::new(1.0, 1.0, -2.0, 1.0)));
+        program.set_4fv_uniform_value(
+            view_uniform,
+            nalgebra::Matrix4::from_diagonal(&nalgebra::Vector4::new(1.0, 1.0, -2.0, 1.0)),
+        );
         program.set_4fv_uniform_value(
             projection_uniform,
             *nalgebra::Perspective3::new(16.0 / 9.0, 3.14 / 4.0, 0.1, 15.0).as_matrix(),
@@ -69,7 +73,7 @@ impl RenderObject {
             color_uniform,
             model_uniform,
             view_uniform,
-            projection_uniform,
+            _projection_uniform: projection_uniform,
         })
     }
 
@@ -77,19 +81,18 @@ impl RenderObject {
         self.program.set_4f_uniform_value(self.color_uniform, color);
     }
 
-    pub fn set_model_matrix(&self, matrix: nalgebra::Matrix4<f32>) {
-        self.program
-            .set_4fv_uniform_value(self.model_uniform, matrix);
+    pub fn set_model_matrix(&self, offset: Vector3<f32>) {
+        self.program.set_4fv_uniform_value(
+            self.model_uniform,
+            RenderObject::get_translation_matrix(offset),
+        );
     }
 
-    pub fn set_view_matrix(&self, matrix: nalgebra::Matrix4<f32>) {
-        self.program
-            .set_4fv_uniform_value(self.view_uniform, matrix);
-    }
-
-    pub fn set_projection_matrix(&self, matrix: nalgebra::Matrix4<f32>) {
-        self.program
-            .set_4fv_uniform_value(self.projection_uniform, matrix);
+    pub fn set_view_matrix(&self, view_vector: nalgebra::Vector4<f32>) {
+        self.program.set_4fv_uniform_value(
+            self.view_uniform,
+            nalgebra::Matrix4::from_diagonal(&view_vector),
+        );
     }
 
     pub fn render(&self, gl: &gl::Gl) {
@@ -98,7 +101,7 @@ impl RenderObject {
         unsafe { gl.DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
     }
 
-    pub fn get_translation_matrix(offset: Vector3<f32>) ->  nalgebra::Matrix4<f32> {
+    fn get_translation_matrix(offset: Vector3<f32>) -> nalgebra::Matrix4<f32> {
         // See https://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
         let mut identity = nalgebra::Matrix4::identity();
         identity.m14 = offset.x;
