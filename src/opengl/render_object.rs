@@ -1,7 +1,7 @@
 use nalgebra::Vector3;
 
 use super::buffer::{Buffer, VertexArray};
-use super::{Program, Shader};
+use super::{Program, Renderable, Shader};
 
 const COLOR_UNIFORM_NAME: &str = "colorUniform\0";
 const MODEL_UNIFORM_NAME: &str = "modelUniform\0";
@@ -95,12 +95,6 @@ impl RenderObject {
         );
     }
 
-    pub fn render(&self, gl: &gl::Gl) {
-        self.program.set_used();
-        self.vao.bind();
-        unsafe { gl.DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
-    }
-
     fn get_translation_matrix(offset: Vector3<f32>) -> nalgebra::Matrix4<f32> {
         // See https://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
         let mut identity = nalgebra::Matrix4::identity();
@@ -108,5 +102,13 @@ impl RenderObject {
         identity.m24 = offset.y;
         identity.m34 = offset.z;
         identity
+    }
+}
+
+impl Renderable for RenderObject {
+    fn render(&self, gl: &gl::Gl) {
+        self.program.set_used();
+        self.vao.bind();
+        unsafe { gl.DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
     }
 }

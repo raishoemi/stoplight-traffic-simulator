@@ -22,7 +22,7 @@ fn main() {
     let vertices = geometry::cube(1.0);
     let triangle =
         RenderObject::new(&gl, vertices, nalgebra::Vector4::from([0.5, 0.5, 0.3, 0.3])).unwrap();
-    renderer.render_objects.push(triangle);
+    renderer.render_objects.push(Box::new(triangle));
 
     renderer.render(&gl);
 }

@@ -1,11 +1,11 @@
-use crate::opengl::{ColorBuffer, RenderObject, Viewport};
+use crate::opengl::{ColorBuffer, Renderable, Viewport};
 use nalgebra as na;
 
 extern crate gl;
 extern crate sdl2;
 
 pub struct Renderer {
-    pub render_objects: Vec<RenderObject>,
+    pub render_objects: Vec<Box<dyn Renderable>>,
     pub window: sdl2::video::Window,
     pub video_subsystem: sdl2::VideoSubsystem,
     sdl: sdl2::Sdl,

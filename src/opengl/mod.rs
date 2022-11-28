@@ -11,3 +11,7 @@ pub use color_buffer::ColorBuffer;
 pub use shader::Shader;
 pub use program::Program;
 pub use render_object::RenderObject;
+
+pub trait Renderable {
+    fn render(&self, gl: &gl::Gl);
+}
