@@ -7,7 +7,7 @@ pub struct ColorBuffer {
 impl ColorBuffer {
     pub fn from_color(color: na::Vector3<f32>) -> Self {
         ColorBuffer {
-            color: color.fixed_resize::<4, 1>(1.0)
+            color: color.fixed_resize::<4, 1>(1.0),
         }
     }
 
