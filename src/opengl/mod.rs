@@ -1,16 +1,16 @@
-mod viewport;
-mod color_buffer;
-mod shader;
-mod program;
-mod utils;
-mod render_object;
 mod buffer;
+mod color_buffer;
+mod program;
+mod render_object;
+mod shader;
+mod utils;
+mod viewport;
 
-pub use viewport::Viewport;
 pub use color_buffer::ColorBuffer;
-pub use shader::Shader;
 pub use program::Program;
 pub use render_object::RenderObject;
+pub use shader::Shader;
+pub use viewport::Viewport;
 
 pub trait Renderable {
     fn render(&self, gl: &gl::Gl);

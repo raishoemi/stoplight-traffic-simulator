@@ -8,11 +8,11 @@ pub struct Renderer {
     pub render_objects: Vec<Box<dyn Renderable>>,
     pub window: sdl2::video::Window,
     pub video_subsystem: sdl2::VideoSubsystem,
-    sdl: sdl2::Sdl,
+    pub sdl: sdl2::Sdl,
 }
 
 impl Renderer {
-    pub fn init() -> Self {
+    pub fn init() -> Renderer {
         let sdl = sdl2::init().unwrap();
         let video_subsystem = sdl.video().unwrap();
         let gl_attr = video_subsystem.gl_attr();
@@ -24,6 +24,7 @@ impl Renderer {
             .resizable()
             .build()
             .unwrap();
+        window.gl_create_context().unwrap();
         Renderer {
             render_objects: Vec::new(),
             sdl,
@@ -32,7 +33,11 @@ impl Renderer {
         }
     }
 
-    pub fn render(&self, gl: &gl::Gl) {
+    pub fn render(&self) {
+        let gl = gl::Gl::load_with(|s| {
+            self.video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void
+        });
+
         let color_buffer = ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
         color_buffer.set_used(&gl);
 

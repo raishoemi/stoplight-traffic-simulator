@@ -18,6 +18,11 @@ impl ColorBuffer {
     pub fn set_used(&self, gl: &gl::Gl) {
         unsafe {
             gl.ClearColor(self.color.x, self.color.y, self.color.z, 1.0);
+            // if an error occures, print to the console
+            let error = gl.GetError();
+            if error != gl::NO_ERROR {
+                println!("{:?}", error);
+            }
         }
     }
 
