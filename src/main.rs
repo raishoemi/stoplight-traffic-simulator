@@ -4,7 +4,7 @@ use opengl::{ColorBuffer, Viewport};
 extern crate gl;
 extern crate sdl2;
 
-mod game;
+mod simulation;
 mod geometry;
 pub mod opengl;
 mod renderer;
@@ -28,7 +28,7 @@ fn main() {
     let color_buffer = ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
     color_buffer.set_used(&gl);
 
-    let game = game::Game::init(&gl);
+    let game = simulation::Simulation::init(&gl);
     let FPS = 60;
     let start = std::time::Instant::now();
     let mut delta = 0;

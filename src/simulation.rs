@@ -3,17 +3,17 @@ use crate::{
     opengl::{RenderObject, Renderable},
 };
 
-pub struct Game {
+pub struct Simulation {
     rectangle: RenderObject,
 }
 
-impl Game {
-    pub fn init(gl: &gl::Gl) -> Game {
+impl Simulation {
+    pub fn init(gl: &gl::Gl) -> Simulation {
         let vertices = geometry::cube(1.0);
         let rectangle =
             RenderObject::new(&gl, vertices, nalgebra::Vector4::from([0.5, 0.5, 0.3, 0.3]))
                 .unwrap();
-        Game { rectangle }
+        Simulation { rectangle }
     }
 
     pub fn update(&self, delta_time: f32) {
