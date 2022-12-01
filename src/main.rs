@@ -4,11 +4,11 @@ use opengl::{ColorBuffer, Viewport};
 extern crate gl;
 extern crate sdl2;
 
-mod simulation;
 mod geometry;
 pub mod opengl;
-mod renderer;
+mod simulation;
 
+// TODO: This should be an `engine` library crate, not a binary crate.
 fn main() {
     let sdl = sdl2::init().unwrap();
     let video_subsystem = sdl.video().unwrap();
@@ -22,16 +22,12 @@ fn main() {
         .build()
         .unwrap();
     let _gl_context = window.gl_create_context().unwrap(); // Must be assigned to variable, else it will be dropped immediately
-    let gl = gl::Gl::load_with(|s| {
-        video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void
-    });
+    gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void);
     let color_buffer = ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
-    color_buffer.set_used(&gl);
+    color_buffer.set_used();
 
-    let game = simulation::Simulation::init(&gl);
-    let FPS = 60;
-    let start = std::time::Instant::now();
-    let mut delta = 0;
+    let game = simulation::Simulation::init();
+    // TODO: should implement framewith with delta time
 
     let mut viewport = Viewport::for_window(900, 700);
     let mut event_pump = sdl.event_pump().unwrap();
@@ -44,15 +40,15 @@ fn main() {
                     ..
                 } => {
                     viewport.update_size(w, h);
-                    viewport.set_used(&gl);
+                    viewport.set_used();
                 }
                 _ => {}
             }
         }
-        game.update(0.0);
+        game.update();
 
-        color_buffer.clear(&gl);
-        game.render(&gl);
+        color_buffer.clear();
+        game.render();
         window.gl_swap_window();
     }
 }

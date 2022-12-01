@@ -1,5 +1,3 @@
-use gl;
-
 pub struct Viewport {
     pub x: i32,
     pub y: i32,
@@ -17,7 +15,7 @@ impl Viewport {
         self.h = h;
     }
 
-    pub fn set_used(&self, gl: &gl::Gl) {
-        unsafe { gl.Viewport(self.x, self.y, self.w, self.h) }
+    pub fn set_used(&self) {
+        unsafe { gl::Viewport(self.x, self.y, self.w, self.h) }
     }
 }

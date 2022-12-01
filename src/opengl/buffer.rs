@@ -1,28 +1,24 @@
-use gl;
-
 pub struct Buffer {
     vbo: gl::types::GLuint,
-    gl: gl::Gl,
 }
 
 impl Buffer {
-    pub fn new(gl: &gl::Gl) -> Self {
+    pub fn new() -> Self {
         let mut vbo: gl::types::GLuint = 0;
         unsafe {
-            gl.GenBuffers(1, &mut vbo);
+            gl::GenBuffers(1, &mut vbo);
         }
         Buffer {
-            gl: gl.clone(),
             vbo,
         }
     }
 
     pub fn bind(&self) {
-        unsafe { self.gl.BindBuffer(gl::ARRAY_BUFFER, self.vbo) }
+        unsafe { gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo) }
     }
 
     pub fn unbind(&self) {
-        unsafe { self.gl.BindBuffer(gl::ARRAY_BUFFER, 0) }
+        unsafe { gl::BindBuffer(gl::ARRAY_BUFFER, 0) }
     }
 
     pub fn set_buffer_data<T>(&self, data: &[T], triangles_count: Option<usize>) {
@@ -31,7 +27,7 @@ impl Buffer {
             Some(x) => (x * 3) as usize,
         };
         unsafe {
-            self.gl.BufferData(
+            gl::BufferData(
                 gl::ARRAY_BUFFER,
                 (data_len * std::mem::size_of::<T>()) as gl::types::GLsizeiptr,
                 data.as_ptr() as *const gl::types::GLvoid,
@@ -44,38 +40,36 @@ impl Buffer {
 impl Drop for Buffer {
     fn drop(&mut self) {
         unsafe {
-            self.gl.DeleteBuffers(1, &mut self.vbo);
+            gl::DeleteBuffers(1, &mut self.vbo);
         }
     }
 }
 
 pub struct VertexArray {
-    gl: gl::Gl,
     vao: gl::types::GLuint,
 }
 
 impl VertexArray {
-    pub fn new(gl: &gl::Gl) -> VertexArray {
+    pub fn new() -> VertexArray {
         let mut vao: gl::types::GLuint = 0;
-        unsafe { gl.GenVertexArrays(1, &mut vao) }
+        unsafe { gl::GenVertexArrays(1, &mut vao) }
         VertexArray {
-            gl: gl.clone(),
             vao,
         }
     }
 
     pub fn bind(&self) {
-        unsafe { self.gl.BindVertexArray(self.vao) }
+        unsafe { gl::BindVertexArray(self.vao) }
     }
 
     pub fn unbind(&self) {
-        unsafe { self.gl.BindVertexArray(0) }
+        unsafe { gl::BindVertexArray(0) }
     }
 
     pub fn enable_vertex_attribs(&self) {
         unsafe {
-            self.gl.EnableVertexAttribArray(0);
-            self.gl.VertexAttribPointer(
+            gl::EnableVertexAttribArray(0);
+            gl::VertexAttribPointer(
                 0 as gl::types::GLuint,
                 3,
                 gl::FLOAT,
@@ -89,6 +83,6 @@ impl VertexArray {
 
 impl Drop for VertexArray {
     fn drop(&mut self) {
-        unsafe { self.gl.DeleteVertexArrays(1, &mut self.vao) }
+        unsafe { gl::DeleteVertexArrays(1, &mut self.vao) }
     }
 }

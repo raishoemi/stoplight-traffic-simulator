@@ -13,5 +13,5 @@ pub use shader::Shader;
 pub use viewport::Viewport;
 
 pub trait Renderable {
-    fn render(&self, gl: &gl::Gl);
+    fn render(&self);
 }

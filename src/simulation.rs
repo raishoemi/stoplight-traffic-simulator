@@ -8,20 +8,17 @@ pub struct Simulation {
 }
 
 impl Simulation {
-    pub fn init(gl: &gl::Gl) -> Simulation {
+    pub fn init() -> Simulation {
         let vertices = geometry::cube(1.0);
         let rectangle =
-            RenderObject::new(&gl, vertices, nalgebra::Vector4::from([0.5, 0.5, 0.3, 0.3]))
+            RenderObject::new(vertices, nalgebra::Vector4::from([0.5, 0.5, 0.3, 0.3]))
                 .unwrap();
         Simulation { rectangle }
     }
 
-    pub fn update(&self, delta_time: f32) {
+    pub fn update(&self) {}
 
-        // update game state
-    }
-
-    pub fn render(&self, gl: &gl::Gl) {
-        self.rectangle.render(&gl);
+    pub fn render(&self) {
+        self.rectangle.render();
     }
 }

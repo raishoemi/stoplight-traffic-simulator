@@ -19,16 +19,12 @@ pub struct RenderObject {
 }
 
 impl RenderObject {
-    pub fn new(
-        gl: &gl::Gl,
-        vertices: Vec<f32>,
-        color: nalgebra::Vector4<f32>,
-    ) -> Result<Self, String> {
-        let vert_shader = Shader::from_vert_source(&gl, "assets/triangle.vert")
-            .expect("Failed to load vertex shader");
-        let frag_shader = Shader::from_frag_source(&gl, "assets/triangle.frag")
+    pub fn new(vertices: Vec<f32>, color: nalgebra::Vector4<f32>) -> Result<Self, String> {
+        let vert_shader =
+            Shader::from_vert_source("assets/triangle.vert").expect("Failed to load vertex shader");
+        let frag_shader = Shader::from_frag_source("assets/triangle.frag")
             .expect("Failed to load fragment shader");
-        let program = Program::from_shaders(&gl, &[vert_shader, frag_shader])
+        let program = Program::from_shaders(&[vert_shader, frag_shader])
             .expect("Failed to create program from shaders");
         let triangles_count = vertices.len() / 3;
         program.set_used();
@@ -56,11 +52,11 @@ impl RenderObject {
             projection_uniform,
             *nalgebra::Perspective3::new(16.0 / 9.0, 3.14 / 4.0, 0.1, 15.0).as_matrix(),
         );
-        let vbo = Buffer::new(&gl);
+        let vbo = Buffer::new();
         vbo.bind();
         vbo.set_buffer_data(&vertices, Some(triangles_count));
         vbo.unbind();
-        let vao = VertexArray::new(&gl);
+        let vao = VertexArray::new();
         vao.bind();
         vbo.bind();
         vao.enable_vertex_attribs();
@@ -106,9 +102,9 @@ impl RenderObject {
 }
 
 impl Renderable for RenderObject {
-    fn render(&self, gl: &gl::Gl) {
+    fn render(&self) {
         self.program.set_used();
         self.vao.bind();
-        unsafe { gl.DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
+        unsafe { gl::DrawArrays(gl::TRIANGLES, 0, self.triangles_count as gl::types::GLsizei) }
     }
 }
