@@ -1,6 +1,6 @@
 use nalgebra::Vector3;
 
-use super::buffer::{Buffer, VertexArray, BufferTarget};
+use super::buffer::{Buffer, BufferTarget, VertexArray};
 use super::{Program, Renderable, Shader};
 
 const COLOR_UNIFORM_NAME: &str = "colorUniform\0";
@@ -9,6 +9,7 @@ const VIEW_UNIFORM_NAME: &str = "viewUniform\0";
 const PROJECTION_UNIFORM_NAME: &str = "projectionUniform\0";
 
 pub struct RenderObject {
+    pub position: Vector3<f32>,
     program: Program,
     vao: VertexArray,
     triangles_count: usize,
@@ -44,8 +45,8 @@ impl RenderObject {
             PROJECTION_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar,
         );
         program.set_4f_uniform_value(color_uniform, color);
-        let translated_model =
-            RenderObject::get_translation_matrix(nalgebra::Vector3::new(0.0, 0.0, 3.0));
+        let position = Vector3::new(0.0, 0.0, 3.0);
+        let translated_model = RenderObject::convert_position_to_model_matrix(&position);
         program.set_4fv_uniform_value(model_uniform, translated_model);
         program.set_4fv_uniform_value(
             view_uniform,
@@ -66,6 +67,7 @@ impl RenderObject {
         vbo.unbind();
         vao.unbind();
         Ok(RenderObject {
+            position,
             program,
             vao,
             triangles_count,
@@ -80,10 +82,13 @@ impl RenderObject {
         self.program.set_4f_uniform_value(self.color_uniform, color);
     }
 
-    pub fn set_model_matrix(&self, offset: Vector3<f32>) {
+    pub fn set_position(&mut self, offset: Vector3<f32>) {
+        self.position.x = offset.x;
+        self.position.y = offset.y;
+        self.position.z = offset.z;
         self.program.set_4fv_uniform_value(
             self.model_uniform,
-            RenderObject::get_translation_matrix(offset),
+            RenderObject::convert_position_to_model_matrix(&offset),
         );
     }
 
@@ -94,7 +99,7 @@ impl RenderObject {
         );
     }
 
-    fn get_translation_matrix(offset: Vector3<f32>) -> nalgebra::Matrix4<f32> {
+    fn convert_position_to_model_matrix(offset: &Vector3<f32>) -> nalgebra::Matrix4<f32> {
         // See https://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
         let mut identity = nalgebra::Matrix4::identity();
         identity.m14 = offset.x;

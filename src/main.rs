@@ -42,13 +42,13 @@ fn main() {
     // unsafe {
     //     _texture.gl_bind_texture();
     // }
-    
+
     let _gl_context = canvas.window().gl_create_context().unwrap(); // Must be assigned to variable, else it will be dropped immediately
     gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void);
     let color_buffer = ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
     color_buffer.set_used();
 
-    let game = simulation::Simulation::init();
+    let mut game = simulation::Simulation::init();
     // TODO: should implement framewith with delta time
 
     let mut viewport = Viewport::for_window(900, 700);
@@ -67,7 +67,7 @@ fn main() {
                 _ => {}
             }
         }
-        game.update();
+        game.update(&event_pump);
 
         color_buffer.clear();
         game.render();
