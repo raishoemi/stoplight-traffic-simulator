@@ -1,4 +1,5 @@
 use nalgebra::Vector3;
+use sdl2::keyboard::Scancode;
 
 use crate::{
     geometry,
@@ -24,26 +25,10 @@ impl Simulation {
             .keyboard_state()
             .pressed_scancodes()
             .for_each(|scancode| match scancode {
-                sdl2::keyboard::Scancode::D => self.rectangle.set_position(Vector3::new(
-                    self.rectangle.position.x + 0.01,
-                    self.rectangle.position.y,
-                    self.rectangle.position.z,
-                )),
-                sdl2::keyboard::Scancode::A => self.rectangle.set_position(Vector3::new(
-                    self.rectangle.position.x - 0.01,
-                    self.rectangle.position.y,
-                    self.rectangle.position.z,
-                )),
-                sdl2::keyboard::Scancode::W => self.rectangle.set_position(Vector3::new(
-                    self.rectangle.position.x,
-                    self.rectangle.position.y + 0.01,
-                    self.rectangle.position.z,
-                )),
-                sdl2::keyboard::Scancode::S => self.rectangle.set_position(Vector3::new(
-                    self.rectangle.position.x,
-                    self.rectangle.position.y - 0.01,
-                    self.rectangle.position.z,
-                )),
+                Scancode::D => self.rectangle.move_by(Vector3::new(0.01, 0.0, 0.0)),
+                Scancode::A => self.rectangle.move_by(Vector3::new(-0.01, 0.0, 0.0)),
+                Scancode::W => self.rectangle.move_by(Vector3::new(0.0, 0.01, 0.0)),
+                Scancode::S => self.rectangle.move_by(Vector3::new(0.0, -0.01, 0.0)),
                 _ => (),
             });
     }

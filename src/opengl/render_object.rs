@@ -82,13 +82,11 @@ impl RenderObject {
         self.program.set_4f_uniform_value(self.color_uniform, color);
     }
 
-    pub fn set_position(&mut self, offset: Vector3<f32>) {
-        self.position.x = offset.x;
-        self.position.y = offset.y;
-        self.position.z = offset.z;
+    pub fn move_by(&mut self, offset: Vector3<f32>) {
+        self.position += offset;
         self.program.set_4fv_uniform_value(
             self.model_uniform,
-            RenderObject::convert_position_to_model_matrix(&offset),
+            RenderObject::convert_position_to_model_matrix(&self.position),
         );
     }
 
