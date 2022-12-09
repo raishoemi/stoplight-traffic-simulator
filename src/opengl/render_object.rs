@@ -1,6 +1,6 @@
 use nalgebra::Vector3;
 
-use super::buffer::{Buffer, VertexArray};
+use super::buffer::{Buffer, VertexArray, BufferTarget};
 use super::{Program, Renderable, Shader};
 
 const COLOR_UNIFORM_NAME: &str = "colorUniform\0";
@@ -19,7 +19,10 @@ pub struct RenderObject {
 }
 
 impl RenderObject {
-    pub fn new(vertices: Vec<f32>, color: nalgebra::Vector4<f32>) -> Result<Self, String> {
+    pub fn from_vertices(
+        vertices: Vec<f32>,
+        color: nalgebra::Vector4<f32>,
+    ) -> Result<Self, String> {
         let vert_shader =
             Shader::from_vert_source("assets/triangle.vert").expect("Failed to load vertex shader");
         let frag_shader = Shader::from_frag_source("assets/triangle.frag")
@@ -52,7 +55,7 @@ impl RenderObject {
             projection_uniform,
             *nalgebra::Perspective3::new(16.0 / 9.0, 3.14 / 4.0, 0.1, 15.0).as_matrix(),
         );
-        let vbo = Buffer::new();
+        let vbo = Buffer::new(BufferTarget::ArrayBuffer);
         vbo.bind();
         vbo.set_buffer_data(&vertices, Some(triangles_count));
         vbo.unbind();

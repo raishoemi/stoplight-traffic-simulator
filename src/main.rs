@@ -1,5 +1,6 @@
 use nalgebra as na;
 use opengl::{ColorBuffer, Viewport};
+use sdl2::pixels::Color;
 
 extern crate gl;
 extern crate sdl2;
@@ -21,7 +22,28 @@ fn main() {
         .resizable()
         .build()
         .unwrap();
-    let _gl_context = window.gl_create_context().unwrap(); // Must be assigned to variable, else it will be dropped immediately
+
+    //
+    let ttf_context = sdl2::ttf::init().unwrap();
+    let canvas = window.into_canvas().build().unwrap();
+    let texture_creator = canvas.texture_creator();
+    let mut font = ttf_context
+        .load_font("C:\\Windows\\Fonts\\arial.ttf", 128)
+        .unwrap();
+    font.set_style(sdl2::ttf::FontStyle::BOLD);
+    let surface = font
+        .render("Hello rust!")
+        .blended(Color::RGBA(255, 0, 0, 255))
+        .unwrap();
+    let _texture = texture_creator
+        .create_texture_from_surface(&surface)
+        .unwrap();
+
+    // unsafe {
+    //     _texture.gl_bind_texture();
+    // }
+    
+    let _gl_context = canvas.window().gl_create_context().unwrap(); // Must be assigned to variable, else it will be dropped immediately
     gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void);
     let color_buffer = ColorBuffer::from_color(na::Vector3::new(0.3, 0.3, 0.5));
     color_buffer.set_used();
@@ -49,6 +71,6 @@ fn main() {
 
         color_buffer.clear();
         game.render();
-        window.gl_swap_window();
+        canvas.window().gl_swap_window();
     }
 }
