@@ -44,13 +44,13 @@ impl RenderObject {
         );
         program.set_4f_uniform_value(color_uniform, color);
         let position = Vector3::new(0.0, 0.0, 5.0);
-        let translated_model = RenderObject::convert_position_to_model_matrix(&position);
+        let translated_model = RenderObject::create_model_matrix(&position);
         program.set_4fv_uniform_value(model_uniform, translated_model);
 
         let camera_position = Vector3::new(0.0, 0.0, -2.0);
         program.set_4fv_uniform_value(
             view_uniform,
-            RenderObject::convert_position_to_view_matrix(&camera_position),
+            RenderObject::create_view_matrix(&camera_position),
         );
         program.set_4fv_uniform_value(
             projection_uniform,
@@ -87,7 +87,7 @@ impl RenderObject {
         self.position += offset;
         self.program.set_4fv_uniform_value(
             self.model_uniform,
-            RenderObject::convert_position_to_model_matrix(&self.position),
+            RenderObject::create_model_matrix(&self.position),
         );
     }
 
@@ -95,11 +95,11 @@ impl RenderObject {
         self.camera_position += vector_offset;
         self.program.set_4fv_uniform_value(
             self.view_uniform,
-            RenderObject::convert_position_to_view_matrix(&self.camera_position),
+            RenderObject::create_view_matrix(&self.camera_position),
         );
     }
 
-    fn convert_position_to_model_matrix(position: &Vector3<f32>) -> Matrix4<f32> {
+    fn create_model_matrix(position: &Vector3<f32>) -> Matrix4<f32> {
         // See https://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
         let mut identity = Matrix4::identity();
         identity.m14 = position.x;
@@ -108,7 +108,7 @@ impl RenderObject {
         identity
     }
 
-    fn convert_position_to_view_matrix(position: &Vector3<f32>) -> Matrix4<f32> {
+    fn create_view_matrix(position: &Vector3<f32>) -> Matrix4<f32> {
         let camera_position = Point3::new(position.x, position.y, position.z);
         let target = Point3::new(0.0, 0.0, 0.0);
         let up = Vector3::new(0.0, 1.0, 0.0);
