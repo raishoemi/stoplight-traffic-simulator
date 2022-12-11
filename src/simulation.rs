@@ -29,6 +29,13 @@ impl Simulation {
                 Scancode::A => self.rectangle.move_by(Vector3::new(-0.01, 0.0, 0.0)),
                 Scancode::W => self.rectangle.move_by(Vector3::new(0.0, 0.01, 0.0)),
                 Scancode::S => self.rectangle.move_by(Vector3::new(0.0, -0.01, 0.0)),
+
+                Scancode::Y => self.rectangle.move_camera(Vector3::new(0.01, 0.0, 0.0)),
+                Scancode::U => self.rectangle.move_camera(Vector3::new(-0.01, 0.0, 0.0)),
+                Scancode::H => self.rectangle.move_camera(Vector3::new(0.0, 0.01, 0.0)),
+                Scancode::J => self.rectangle.move_camera(Vector3::new(0.0, -0.01, 0.0)),
+                Scancode::N => self.rectangle.move_camera(Vector3::new(0.0, 0.0, 0.01)),
+                Scancode::M => self.rectangle.move_camera(Vector3::new(0.0, 0.0, -0.01)),
                 _ => (),
             });
     }

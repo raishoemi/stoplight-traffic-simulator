@@ -1,4 +1,4 @@
-use nalgebra::Vector3;
+use nalgebra::{Matrix4, Perspective3, Point3, Vector3, Vector4};
 
 use super::buffer::{Buffer, BufferTarget, VertexArray};
 use super::{Program, Renderable, Shader};
@@ -10,6 +10,7 @@ const PROJECTION_UNIFORM_NAME: &str = "projectionUniform\0";
 
 pub struct RenderObject {
     pub position: Vector3<f32>,
+    pub camera_position: Vector3<f32>,
     program: Program,
     vao: VertexArray,
     triangles_count: usize,
@@ -20,10 +21,7 @@ pub struct RenderObject {
 }
 
 impl RenderObject {
-    pub fn from_vertices(
-        vertices: Vec<f32>,
-        color: nalgebra::Vector4<f32>,
-    ) -> Result<Self, String> {
+    pub fn from_vertices(vertices: Vec<f32>, color: Vector4<f32>) -> Result<Self, String> {
         let vert_shader =
             Shader::from_vert_source("assets/triangle.vert").expect("Failed to load vertex shader");
         let frag_shader = Shader::from_frag_source("assets/triangle.frag")
@@ -45,16 +43,18 @@ impl RenderObject {
             PROJECTION_UNIFORM_NAME.to_string().as_ptr() as *const gl::types::GLchar,
         );
         program.set_4f_uniform_value(color_uniform, color);
-        let position = Vector3::new(0.0, 0.0, 3.0);
+        let position = Vector3::new(0.0, 0.0, 5.0);
         let translated_model = RenderObject::convert_position_to_model_matrix(&position);
         program.set_4fv_uniform_value(model_uniform, translated_model);
+
+        let camera_position = Vector3::new(0.0, 0.0, -2.0);
         program.set_4fv_uniform_value(
             view_uniform,
-            nalgebra::Matrix4::from_diagonal(&nalgebra::Vector4::new(1.0, 1.0, -2.0, 1.0)),
+            RenderObject::convert_position_to_view_matrix(&camera_position),
         );
         program.set_4fv_uniform_value(
             projection_uniform,
-            *nalgebra::Perspective3::new(16.0 / 9.0, 3.14 / 4.0, 0.1, 15.0).as_matrix(),
+            *Perspective3::new(16.0 / 9.0, 3.14 / 4.0, 0.1, 15.0).as_matrix(),
         );
         let vbo = Buffer::new(BufferTarget::ArrayBuffer);
         vbo.bind();
@@ -68,6 +68,7 @@ impl RenderObject {
         vao.unbind();
         Ok(RenderObject {
             position,
+            camera_position,
             program,
             vao,
             triangles_count,
@@ -78,7 +79,7 @@ impl RenderObject {
         })
     }
 
-    pub fn set_color(&self, color: nalgebra::Vector4<f32>) {
+    pub fn set_color(&self, color: Vector4<f32>) {
         self.program.set_4f_uniform_value(self.color_uniform, color);
     }
 
@@ -90,20 +91,29 @@ impl RenderObject {
         );
     }
 
-    pub fn set_view_matrix(&self, view_vector: nalgebra::Vector4<f32>) {
+    pub fn move_camera(&mut self, vector_offset: Vector3<f32>) {
+        self.camera_position += vector_offset;
         self.program.set_4fv_uniform_value(
             self.view_uniform,
-            nalgebra::Matrix4::from_diagonal(&view_vector),
+            RenderObject::convert_position_to_view_matrix(&self.camera_position),
         );
     }
 
-    fn convert_position_to_model_matrix(offset: &Vector3<f32>) -> nalgebra::Matrix4<f32> {
+    fn convert_position_to_model_matrix(position: &Vector3<f32>) -> Matrix4<f32> {
         // See https://solarianprogrammer.com/2013/05/22/opengl-101-matrices-projection-view-model/
-        let mut identity = nalgebra::Matrix4::identity();
-        identity.m14 = offset.x;
-        identity.m24 = offset.y;
-        identity.m34 = offset.z;
+        let mut identity = Matrix4::identity();
+        identity.m14 = position.x;
+        identity.m24 = position.y;
+        identity.m34 = position.z;
         identity
+    }
+
+    fn convert_position_to_view_matrix(position: &Vector3<f32>) -> Matrix4<f32> {
+        let camera_position = Point3::new(position.x, position.y, position.z);
+        let target = Point3::new(0.0, 0.0, 0.0);
+        let up = Vector3::new(0.0, 1.0, 0.0);
+        let view_matrix = Matrix4::look_at_rh(&camera_position, &target, &up);
+        view_matrix
     }
 }
 
