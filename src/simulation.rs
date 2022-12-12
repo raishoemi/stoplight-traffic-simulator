@@ -20,22 +20,25 @@ impl Simulation {
     }
 
     pub fn update(&mut self, event_pump: &sdl2::EventPump) {
+        let movement_offset = 0.001;
+
         // match event_pump keyboard state
+        #[rustfmt::skip]
         event_pump
             .keyboard_state()
             .pressed_scancodes()
             .for_each(|scancode| match scancode {
-                Scancode::D => self.rectangle.move_by(Vector3::new(0.01, 0.0, 0.0)),
-                Scancode::A => self.rectangle.move_by(Vector3::new(-0.01, 0.0, 0.0)),
-                Scancode::W => self.rectangle.move_by(Vector3::new(0.0, 0.01, 0.0)),
-                Scancode::S => self.rectangle.move_by(Vector3::new(0.0, -0.01, 0.0)),
+                Scancode::D => self.rectangle.move_by(Vector3::new(movement_offset, 0.0, 0.0)),
+                Scancode::A => self.rectangle.move_by(Vector3::new(-movement_offset, 0.0, 0.0)),
+                Scancode::W => self.rectangle.move_by(Vector3::new(0.0, movement_offset, 0.0)),
+                Scancode::S => self.rectangle.move_by(Vector3::new(0.0, -movement_offset, 0.0)),
 
-                Scancode::Y => self.rectangle.move_camera(Vector3::new(0.01, 0.0, 0.0)),
-                Scancode::U => self.rectangle.move_camera(Vector3::new(-0.01, 0.0, 0.0)),
-                Scancode::H => self.rectangle.move_camera(Vector3::new(0.0, 0.01, 0.0)),
-                Scancode::J => self.rectangle.move_camera(Vector3::new(0.0, -0.01, 0.0)),
-                Scancode::N => self.rectangle.move_camera(Vector3::new(0.0, 0.0, 0.01)),
-                Scancode::M => self.rectangle.move_camera(Vector3::new(0.0, 0.0, -0.01)),
+                Scancode::Y => self.rectangle.move_camera(Vector3::new(movement_offset, 0.0, 0.0)),
+                Scancode::U => self.rectangle.move_camera(Vector3::new(-movement_offset, 0.0, 0.0)),
+                Scancode::H => self.rectangle.move_camera(Vector3::new(0.0, movement_offset, 0.0)),
+                Scancode::J => self.rectangle.move_camera(Vector3::new(0.0, -movement_offset, 0.0)),
+                Scancode::N => self.rectangle.move_camera(Vector3::new(0.0, 0.0, movement_offset)),
+                Scancode::M => self.rectangle.move_camera(Vector3::new(0.0, 0.0, -movement_offset)),
                 _ => (),
             });
     }
