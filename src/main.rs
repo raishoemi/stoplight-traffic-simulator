@@ -1,23 +1,20 @@
 mod camera;
+mod traffic_light;
 
 use bevy::prelude::*;
 use camera::{camera_control, setup_camera};
+use traffic_light::{setup_traffic_light, change_traffic_light};
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         // .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
-        .add_systems(Startup, (setup, setup_camera))
-        .add_systems(Update, camera_control)
+        .add_systems(Startup, (setup, setup_camera, setup_traffic_light))
+        .add_systems(Update, (camera_control, change_traffic_light))
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(SceneBundle {
-        scene: asset_server.load("car.gltf#Scene0"),
-        ..default()
-    });
-
+fn setup(mut commands: Commands) {
     commands.spawn(PointLightBundle {
         point_light: PointLight {
             intensity: 1500.0,
