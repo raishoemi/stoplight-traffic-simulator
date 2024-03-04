@@ -1,16 +1,33 @@
 mod camera;
+mod car;
 mod traffic_light;
 
 use bevy::prelude::*;
-use camera::{camera_control, setup_camera};
-use traffic_light::{setup_traffic_light, change_traffic_light};
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_event::<traffic_light::LightChange>()
         // .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
-        .add_systems(Startup, (setup, setup_camera, setup_traffic_light))
-        .add_systems(Update, (camera_control, change_traffic_light))
+        .add_systems(Startup, setup)
+
+        // Camera
+        .add_systems(Startup, camera::setup)
+        .add_systems(Update, camera::update)
+
+        // Tarffic Light
+        .add_systems(Startup, traffic_light::setup)
+        .add_systems(
+            Update,
+            (
+                traffic_light::update_event_emitter,
+                traffic_light::update,
+            ),
+        )
+
+        // // Car
+        .add_systems(Startup, car::setup)
+        .add_systems(FixedUpdate, car::apply_movement)
         .run();
 }
 
