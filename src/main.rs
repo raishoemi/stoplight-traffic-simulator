@@ -2,7 +2,7 @@ mod camera;
 mod car;
 mod traffic_light;
 
-use bevy::prelude::*;
+use bevy::{asset::UpdateAssets, prelude::*};
 
 fn main() {
     App::new()
@@ -24,6 +24,7 @@ fn main() {
                 traffic_light::update,
             ),
         )
+        .add_systems(UpdateAssets, traffic_light::on_scene_loaded)
 
         // // Car
         .add_systems(Startup, car::setup)

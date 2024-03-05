@@ -2,8 +2,7 @@ use core::fmt;
 
 use bevy::prelude::*;
 
-
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Light {
     RedLight,
     GreenLight,
@@ -20,9 +19,17 @@ impl fmt::Display for Light {
     }
 }
 
+// impl Copy for Light { }
+// impl Clone for Light {
+//     fn clone(&self) -> Light {
+//         *self
+//     }
+// }
+
 #[derive(Component)]
 pub struct TrafficLight {
     pub current_light: Light,
+    pub handle_id: AssetId<Scene>,
 }
 
 #[derive(Component)]
@@ -52,10 +59,11 @@ pub fn setup(
         },
         TrafficLight {
             current_light: Light::RedLight,
+            handle_id: scene_handle.id(),
         },
         LightChangeTimer {
             go: Timer::from_seconds(10.0, TimerMode::Once),
-            stop: Timer::from_seconds(3.0, TimerMode::Once),
+            stop: Timer::from_seconds(10.0, TimerMode::Once),
             yellow: Timer::from_seconds(1.0, TimerMode::Once),
         },
     ));
@@ -128,6 +136,26 @@ pub fn update(
                     }
                 }
             }
+        }
+    }
+}
+
+pub fn on_scene_loaded(
+    mut ev_asset: EventReader<AssetEvent<Scene>>,
+    traffic_light_query: Query<&TrafficLight>,
+    mut event_writer: EventWriter<LightChange>,
+) {
+    for ev in ev_asset.read() {
+        match ev {
+            AssetEvent::Added { id, .. } => {
+                let traffic_light = traffic_light_query.single();
+                if traffic_light.handle_id == *id {
+                    event_writer.send(LightChange {
+                        light: traffic_light.current_light.clone(),
+                    });
+                }
+            }
+            _ => {}
         }
     }
 }

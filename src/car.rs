@@ -36,7 +36,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SceneBundle {
             scene: asset_server.load("car.gltf#Scene0"),
-            transform: Transform::from_xyz(0.0, 0.0, 20.0)
+            transform: Transform::from_xyz(0.0, 0.0, 10.0)
                 .with_rotation(Quat::from_rotation_y(std::f32::consts::PI)),
             ..Default::default()
         },
@@ -67,7 +67,6 @@ pub fn apply_movement(
         car_q.single_mut();
     let traffic_light = traffic_light_q.single();
     let before_traffic_light: bool = (car_transform.translation.z - BREAK_LINE_POSITION) > 0.0;
-    println!("car z position: {}", car_transform.translation.z);
     if before_traffic_light {
         match traffic_light.current_light {
             Light::GreenLight => {
@@ -79,17 +78,13 @@ pub fn apply_movement(
                     SLOW_DOWN_ACCELERATION,
                     REACTION_TIME_IN_SECONDS,
                 );
-                println!("minimum_distance_to_stop: {}", minimum_distance_to_stop);
                 if car_transform.translation.z - BREAK_LINE_POSITION + SLOW_DOWN_BUFFER < minimum_distance_to_stop {
-                    println!("speeding up in red light");
                     acceleration.0 = SPEED_UP_ACCELERATION;
                 } else if car_transform.translation.z - minimum_distance_to_stop < SLOW_DOWN_BUFFER + BREAK_LINE_POSITION
                 {
-                    println!("about to stop in red light");
                     reaction_timer.0.tick(time.delta());
                     if reaction_timer.0.finished() {
                     reaction_timer.0.tick(time.delta());
-                        println!("stopped in red light");
                         reaction_timer.0.reset();
                         acceleration.0 = calculate_stopping_acceleration(
                             velocity.0,
@@ -97,7 +92,6 @@ pub fn apply_movement(
                         );
                     }
                 } else {
-                    println!("speeding up BEFORE STOPPPING in red light");
                     acceleration.0 = SPEED_UP_ACCELERATION;
                 }
             }
