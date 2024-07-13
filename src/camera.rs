@@ -12,7 +12,7 @@ pub fn setup(mut commands: Commands) {
 
 pub fn update(
     mut query: Query<(&Camera, &mut Transform)>,
-    mouse_buttons: Res<Input<MouseButton>>,
+    mouse_buttons: Res<ButtonInput<MouseButton>>,
     mut mouse_scroll_evr: EventReader<MouseWheel>,
     mut mouse_motion_evr: EventReader<MouseMotion>,
 ) {

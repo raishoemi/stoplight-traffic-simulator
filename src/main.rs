@@ -1,8 +1,8 @@
 mod camera;
-mod car;
 mod traffic_light;
+mod car_fleet;
 
-use bevy::{asset::UpdateAssets, prelude::*};
+use bevy::prelude::*;
 
 fn main() {
     App::new()
@@ -24,21 +24,17 @@ fn main() {
                 traffic_light::update,
             ),
         )
-        .add_systems(UpdateAssets, traffic_light::on_scene_loaded)
+        .add_systems(PreUpdate, traffic_light::on_scene_loaded)
 
-        // // Car
-        .add_systems(Startup, car::setup)
-        .add_systems(FixedUpdate, car::apply_movement)
+        // Car Fleet
+        .add_systems(Startup, car_fleet::setup)
+        .add_systems(FixedUpdate, car_fleet::update)
         .run();
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            intensity: 1500.0,
-            shadows_enabled: true,
-            ..default()
-        },
+    commands.spawn( DirectionalLightBundle {
+        directional_light: DirectionalLight { ..default() },
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
         ..default()
     });
