@@ -12,7 +12,7 @@ use bevy::{
 
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let scene: Handle<Scene> = asset_server.load("car.gltf#Scene0");
-    for i in 1..=2 {
+    for i in 1..=6 {
         commands.spawn(get_car_bundle(
             scene.clone(),
             Transform::from_xyz(0.0, 0.0, -10.0 * i as f32),

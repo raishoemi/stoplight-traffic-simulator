@@ -39,7 +39,7 @@ fn main() {
 fn setup(mut commands: Commands) {
     commands.spawn( DirectionalLightBundle {
         directional_light: DirectionalLight { ..default() },
-        transform: Transform::from_xyz(4.0, 8.0, 4.0),
+        transform: Transform::from_xyz(-4.0, -8.0, -4.0),
         ..default()
     });
 }
