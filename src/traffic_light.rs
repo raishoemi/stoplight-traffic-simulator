@@ -19,18 +19,14 @@ impl fmt::Display for Light {
     }
 }
 
-// impl Copy for Light { }
-// impl Clone for Light {
-//     fn clone(&self) -> Light {
-//         *self
-//     }
-// }
+#[derive(Component)]
+pub struct TrafficLight;
 
 #[derive(Component)]
-pub struct TrafficLight {
-    pub current_light: Light,
-    pub handle_id: AssetId<Scene>,
-}
+pub struct CurrentLight(pub Light);
+
+#[derive(Component)]
+pub struct HandleId(AssetId<Scene>);
 
 #[derive(Component)]
 pub struct LightChangeTimer {
@@ -54,12 +50,14 @@ pub fn setup(
     commands.spawn((
         SceneBundle {
             scene: scene_handle.clone(),
-            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            transform: Transform::from_xyz(0.0, 0.0, 0.0)
+                .with_rotation(Quat::from_rotation_y(std::f32::consts::PI)),
             ..Default::default()
         },
-        TrafficLight {
-            current_light: Light::RedLight,
-            handle_id: scene_handle.id(),
+        TrafficLight {},
+        CurrentLight { 0: Light::RedLight },
+        HandleId {
+            0: scene_handle.id(),
         },
         LightChangeTimer {
             go: Timer::from_seconds(10.0, TimerMode::Once),
@@ -74,18 +72,18 @@ pub fn setup(
 }
 
 pub fn update_event_emitter(
-    mut traffic_lights_query: Query<(&mut TrafficLight, &mut LightChangeTimer)>,
+    mut traffic_light_q: Query<(&mut CurrentLight, &mut LightChangeTimer), With<TrafficLight>>,
     time: Res<Time>,
     mut event_writer: EventWriter<LightChange>,
 ) {
-    let (mut traffic_light, mut light_change_timers) = traffic_lights_query.single_mut();
+    let (mut current_light, mut light_change_timers) = traffic_light_q.single_mut();
 
-    match traffic_light.current_light {
+    match current_light.0 {
         Light::RedLight => {
             light_change_timers.stop.tick(time.delta());
             if light_change_timers.stop.finished() {
                 light_change_timers.stop.reset();
-                traffic_light.current_light = Light::GreenLight;
+                current_light.0 = Light::GreenLight;
                 event_writer.send(LightChange {
                     light: Light::GreenLight,
                 });
@@ -95,7 +93,7 @@ pub fn update_event_emitter(
             light_change_timers.yellow.tick(time.delta());
             if light_change_timers.yellow.finished() {
                 light_change_timers.yellow.reset();
-                traffic_light.current_light = Light::RedLight;
+                current_light.0 = Light::RedLight;
                 event_writer.send(LightChange {
                     light: Light::RedLight,
                 });
@@ -105,7 +103,7 @@ pub fn update_event_emitter(
             light_change_timers.go.tick(time.delta());
             if light_change_timers.go.finished() {
                 light_change_timers.go.reset();
-                traffic_light.current_light = Light::YellowLight;
+                current_light.0 = Light::YellowLight;
                 event_writer.send(LightChange {
                     light: Light::YellowLight,
                 });
@@ -142,16 +140,16 @@ pub fn update(
 
 pub fn on_scene_loaded(
     mut ev_asset: EventReader<AssetEvent<Scene>>,
-    traffic_light_query: Query<&TrafficLight>,
+    traffic_light_q: Query<(&HandleId, &CurrentLight), With<TrafficLight>>,
     mut event_writer: EventWriter<LightChange>,
 ) {
     for ev in ev_asset.read() {
         match ev {
             AssetEvent::Added { id, .. } => {
-                let traffic_light = traffic_light_query.single();
-                if traffic_light.handle_id == *id {
+                let (traffic_light_handle_id, current_light) = traffic_light_q.single();
+                if traffic_light_handle_id.0 == *id {
                     event_writer.send(LightChange {
-                        light: traffic_light.current_light.clone(),
+                        light: current_light.0.clone(),
                     });
                 }
             }

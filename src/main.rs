@@ -7,6 +7,10 @@ use bevy::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+
+        // Slow Motion
+        // .insert_resource(Time::<Fixed>::from_hz(10.0))
+
         .add_event::<traffic_light::LightChange>()
         // .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
         .add_systems(Startup, setup)
