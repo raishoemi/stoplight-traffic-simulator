@@ -1,0 +1,10 @@
+/home/runner/work/stoplight-traffic-simulator/stoplight-traffic-simulator/target/wasm32-unknown-unknown/release/deps/libowned_ttf_parser-0d1e53733ad98685.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/convert.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/owned.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/preparse.rs
+
+/home/runner/work/stoplight-traffic-simulator/stoplight-traffic-simulator/target/wasm32-unknown-unknown/release/deps/libowned_ttf_parser-0d1e53733ad98685.rlib: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/convert.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/owned.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/preparse.rs
+
+/home/runner/work/stoplight-traffic-simulator/stoplight-traffic-simulator/target/wasm32-unknown-unknown/release/deps/owned_ttf_parser-0d1e53733ad98685.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/convert.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/owned.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/preparse.rs
+
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/lib.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/convert.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/owned.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/owned_ttf_parser-0.19.0/src/preparse.rs:
