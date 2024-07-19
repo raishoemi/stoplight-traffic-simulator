@@ -1,6 +1,8 @@
 use core::fmt;
 
-use bevy::prelude::*;
+use bevy::{ecs::event, prelude::*};
+
+use crate::ui_controls::ResetSimluation;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Light {
@@ -72,18 +74,16 @@ pub fn setup(
 }
 
 pub fn update_event_emitter(
-    mut traffic_light_q: Query<(&mut CurrentLight, &mut LightChangeTimer), With<TrafficLight>>,
+    mut traffic_light_q: Query<(&CurrentLight, &mut LightChangeTimer), With<TrafficLight>>,
     time: Res<Time>,
     mut event_writer: EventWriter<LightChange>,
 ) {
-    let (mut current_light, mut light_change_timers) = traffic_light_q.single_mut();
+    let (current_light, mut light_change_timers) = traffic_light_q.single_mut();
 
     match current_light.0 {
         Light::RedLight => {
             light_change_timers.stop.tick(time.delta());
             if light_change_timers.stop.finished() {
-                light_change_timers.stop.reset();
-                current_light.0 = Light::GreenLight;
                 event_writer.send(LightChange {
                     light: Light::GreenLight,
                 });
@@ -92,8 +92,6 @@ pub fn update_event_emitter(
         Light::YellowLight => {
             light_change_timers.yellow.tick(time.delta());
             if light_change_timers.yellow.finished() {
-                light_change_timers.yellow.reset();
-                current_light.0 = Light::RedLight;
                 event_writer.send(LightChange {
                     light: Light::RedLight,
                 });
@@ -102,8 +100,6 @@ pub fn update_event_emitter(
         Light::GreenLight => {
             light_change_timers.go.tick(time.delta());
             if light_change_timers.go.finished() {
-                light_change_timers.go.reset();
-                current_light.0 = Light::YellowLight;
                 event_writer.send(LightChange {
                     light: Light::YellowLight,
                 });
@@ -115,11 +111,17 @@ pub fn update_event_emitter(
 pub fn update(
     mut light_change_events: EventReader<LightChange>,
     traffic_lights_entity_query: Query<Entity, With<TrafficLight>>,
+    mut traffic_light_q: Query<(&mut CurrentLight, &mut LightChangeTimer), With<TrafficLight>>,
     children: Query<&Children>,
     mut child_query: Query<(&Name, &mut Visibility)>,
 ) {
     let traffic_light_entity = traffic_lights_entity_query.single();
+    let (mut current_light, mut light_change_timer) = traffic_light_q.single_mut();
     for new_light in light_change_events.read() {
+        current_light.0 = new_light.light;
+        light_change_timer.go.reset();
+        light_change_timer.yellow.reset();
+        light_change_timer.stop.reset();
         for child_entity in children.iter_descendants(traffic_light_entity) {
             if let Ok((entity_name, mut visible)) = child_query.get_mut(child_entity) {
                 let entity_name = entity_name.to_string();
@@ -155,5 +157,16 @@ pub fn on_scene_loaded(
             }
             _ => {}
         }
+    }
+}
+
+pub fn reset_simulation_listener(
+    mut reset_simulation_event: EventReader<ResetSimluation>,
+    mut event_writer: EventWriter<LightChange>,
+) {
+    for _ in reset_simulation_event.read() {
+        event_writer.send(LightChange {
+            light: Light::RedLight,
+        });
     }
 }

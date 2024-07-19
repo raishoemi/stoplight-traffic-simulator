@@ -1,5 +1,5 @@
-use crate::traffic_light::CurrentLight;
-use bevy::prelude::Without;
+use crate::{traffic_light::CurrentLight, ui_controls::ResetSimluation};
+use bevy::prelude::{EventReader, Without};
 
 use super::car::{self, get_car_bundle, Acceleration, Car, IsBreaking, ReactionTimer, Velocity};
 use bevy::{
@@ -16,7 +16,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         commands.spawn(get_car_bundle(
             scene.clone(),
             Transform::from_xyz(0.0, 0.0, -10.0 * i as f32),
-                //.with_rotation(Quat::from_rotation_y(std::f32::consts::PI)),
+            //.with_rotation(Quat::from_rotation_y(std::f32::consts::PI)),
             None,
             None,
         ));
@@ -54,5 +54,29 @@ pub fn update(
             current_light.0,
             traffic_light_transform,
         );
+    }
+}
+
+pub fn reset_simulation_listener(
+    mut reset_simulation_event: EventReader<ResetSimluation>,
+    mut query: Query<(
+        &Car,
+        &mut Transform,
+        &mut Velocity,
+        &mut Acceleration,
+        &mut ReactionTimer,
+        &mut IsBreaking,
+    )>,
+) {
+    for _ in reset_simulation_event.read() {
+        let mut i = 0;
+        for mut car in query.iter_mut() {
+            i += 1;
+            *car.1 = Transform::from_xyz(0.0, 0.0, -10.0 * i as f32);
+            *car.2 = Velocity(0.0);
+            *car.3 = Acceleration(0.0);
+            (car.4 .0).reset();
+            *car.5 = IsBreaking(false);
+        }
     }
 }

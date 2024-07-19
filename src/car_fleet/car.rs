@@ -22,16 +22,16 @@ const BREAK_DISTANCE: f32 = 6.0;
 pub struct Car;
 
 #[derive(Component)]
-pub struct Acceleration(f32);
+pub struct Acceleration(pub f32);
 
 #[derive(Component)]
-pub struct Velocity(f32);
+pub struct Velocity(pub f32);
 
 #[derive(Component)]
-pub struct ReactionTimer(Timer);
+pub struct ReactionTimer(pub Timer);
 
 #[derive(Component)]
-pub struct IsBreaking(bool);
+pub struct IsBreaking(pub bool);
 
 const MAX_VELOCITY: f32 = 0.1;
 const SPEED_UP_ACCELERATION: f32 = 0.003;

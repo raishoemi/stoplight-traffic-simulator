@@ -3,9 +3,13 @@ use bevy::{
     prelude::*,
 };
 
+use crate::ui_controls::ResetSimluation;
+
+const CAMERA_INITIAL_POSITION: Transform = Transform::from_xyz(-7.0, 7.0, -7.0);
+
 pub fn setup(mut commands: Commands) {
     commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-7.0, 7.0, -7.0).looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y),
+        transform: CAMERA_INITIAL_POSITION.looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y),
         ..default()
     });
 }
@@ -40,5 +44,15 @@ pub fn update(
         let zoom = Vec3::new(0.0, 0.0, -event.y) * zoom_speed;
         let rotation = transform.rotation.mul_vec3(zoom);
         transform.translation += rotation;
+    }
+}
+
+pub fn reset_simulation_listener(
+    mut reset_simulation_event: EventReader<ResetSimluation>,
+    mut query: Query<(&Camera, &mut Transform)>,
+) {
+    for _ in reset_simulation_event.read() {
+        let (_, mut camera_position) = query.single_mut();
+        *camera_position = CAMERA_INITIAL_POSITION.looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y)
     }
 }
