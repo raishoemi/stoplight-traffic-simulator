@@ -1,9 +1,0 @@
-/home/runner/work/stoplight-traffic-simulator/stoplight-traffic-simulator/target/wasm32-unknown-unknown/release/deps/libwasm_bindgen_futures-7f3da22bf5870b2c.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/queue.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/task/singlethread.rs
-
-/home/runner/work/stoplight-traffic-simulator/stoplight-traffic-simulator/target/wasm32-unknown-unknown/release/deps/libwasm_bindgen_futures-7f3da22bf5870b2c.rlib: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/queue.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/task/singlethread.rs
-
-/home/runner/work/stoplight-traffic-simulator/stoplight-traffic-simulator/target/wasm32-unknown-unknown/release/deps/wasm_bindgen_futures-7f3da22bf5870b2c.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/queue.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/task/singlethread.rs
-
-/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/lib.rs:
-/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/queue.rs:
-/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wasm-bindgen-futures-0.4.42/src/task/singlethread.rs:
