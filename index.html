@@ -1,27 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Bevy App</title>
-    <style>
-        body {
-            margin: 0;
-        }
-
-        canvas {
-            display: block;
-        }
-    </style>
-</head>
-
-<body>
+<body style="margin: 0px;">
     <script type="module">
-        import init from './traffic-sim.js';
-        async function run() {
-            await init();
-        }
-        run();
+        import init from './traffic_sim.js'
+
+        init().catch((error) => {
+            if (!error.message.startsWith("Using exceptions for control flow, don't mind me. This isn't actually an error!")) {
+                throw error;
+            }
+        });
     </script>
 </body>
 
