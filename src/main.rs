@@ -1,7 +1,7 @@
 mod camera;
 mod car_fleet;
 mod traffic_light;
-mod ui_controls;
+mod ui_components;
 
 use bevy::prelude::*;
 
@@ -27,10 +27,10 @@ fn main() {
         .add_systems(Startup, car_fleet::setup)
         .add_systems(FixedUpdate, car_fleet::update)
         // UI
-        .add_systems(Startup, ui_controls::setup)
-        .add_systems(Update, ui_controls::update)
+        .add_systems(Startup, ui_components::reset_simulation_button::setup)
+        .add_systems(Update, ui_components::reset_simulation_button::update)
         // Simulation Reset
-        .add_event::<ui_controls::ResetSimluation>()
+        .add_event::<ui_components::reset_simulation_button::ResetSimluation>()
         .add_systems(Update, camera::reset_simulation_listener)
         .add_systems(Update, car_fleet::reset_simulation_listener)
         .add_systems(Update, traffic_light::reset_simulation_listener)

@@ -1,4 +1,4 @@
-use crate::{traffic_light::CurrentLight, ui_controls::ResetSimluation};
+use crate::{traffic_light::CurrentLight, ui_components::reset_simulation_button::ResetSimluation};
 use bevy::prelude::{EventReader, Without};
 
 use super::car::{self, get_car_bundle, Acceleration, Car, IsBreaking, ReactionTimer, Velocity};

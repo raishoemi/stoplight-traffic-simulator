@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
 };
 
-use crate::ui_controls::ResetSimluation;
+use crate::ui_components::reset_simulation_button::ResetSimluation;
 
 const CAMERA_INITIAL_POSITION: Transform = Transform::from_xyz(-7.0, 7.0, -7.0);
 

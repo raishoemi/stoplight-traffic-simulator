@@ -2,7 +2,7 @@ use core::fmt;
 
 use bevy::{ecs::event, prelude::*};
 
-use crate::ui_controls::ResetSimluation;
+use crate::ui_components::reset_simulation_button::ResetSimluation;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Light {
