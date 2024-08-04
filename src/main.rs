@@ -27,8 +27,10 @@ fn main() {
         .add_systems(Startup, car_fleet::setup)
         .add_systems(FixedUpdate, car_fleet::update)
         // UI
-        .add_systems(Startup, ui_components::reset_simulation_button::setup)
+        .add_systems(Startup, ui_components::setup)
         .add_systems(Update, ui_components::reset_simulation_button::update)
+        .add_systems(Update, ui_components::reaction_timer_controls::update)
+        .add_systems(Update, ui_components::buttons_hover_effect::update)
         // Simulation Reset
         .add_event::<ui_components::reset_simulation_button::ResetSimluation>()
         .add_systems(Update, camera::reset_simulation_listener)
