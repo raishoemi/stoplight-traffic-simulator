@@ -1,6 +1,6 @@
 use core::fmt;
 
-use bevy::{ecs::event, prelude::*};
+use bevy::prelude::*;
 
 use crate::ui_components::reset_simulation_button::ResetSimluation;
 

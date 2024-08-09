@@ -33,7 +33,6 @@ pub struct IsBreaking(pub bool);
 const MAX_VELOCITY: f32 = 0.1;
 const SPEED_UP_ACCELERATION: f32 = 0.003;
 const SLOW_DOWN_ACCELERATION: f32 = -0.01;
-const REACTION_TIME_IN_SECONDS: f32 = 0.4;
 
 #[derive(Bundle)]
 pub struct CarBundle {
