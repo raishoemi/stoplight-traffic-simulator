@@ -14,9 +14,7 @@ pub fn setup(parent: &mut ChildBuilder) {
                 height: Val::Px(65.0),
                 border: UiRect::all(Val::Px(5.0)),
                 top: Val::Percent(2.0),
-                // horizontally center child text
                 justify_content: JustifyContent::Center,
-                // vertically center child text
                 align_items: AlignItems::Center,
                 ..default()
             },
@@ -48,12 +46,9 @@ pub fn update(
     >,
     mut event_writer: EventWriter<ResetSimluation>,
 ) {
-    print!("Update called?");
     for (interaction, _, _) in &mut interaction_query {
-        print!("Interaction detected");
         match *interaction {
             Interaction::Pressed => {
-                print!("Resetting simulation");
                 event_writer.send(ResetSimluation);
             },
             _ => {},

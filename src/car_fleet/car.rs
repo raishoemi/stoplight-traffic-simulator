@@ -1,9 +1,6 @@
 use bevy::{
     asset::Handle,
-    ecs::{
-        component::Component,
-        system::Res,
-    },
+    ecs::{component::Component, system::Res},
     prelude::{Bundle, Mut},
     scene::{Scene, SceneBundle},
     time::{Time, Timer, TimerMode},
@@ -16,7 +13,7 @@ use crate::traffic_light::Light;
 The distance a car should leave before itself and the obstacle (other car/stoplight) in front of it
 I'm pretty sure the car's position is the center of the car, so I'm setting this value to half_car_length + some offset
  */
-const BREAK_DISTANCE: f32 = 6.0; 
+const BREAK_DISTANCE: f32 = 6.0;
 
 #[derive(Component)]
 pub struct Car;
@@ -53,6 +50,7 @@ pub fn get_car_bundle(
     transform: Transform,
     velocity: Option<f32>,
     acceleration: Option<f32>,
+    reaction_time_in_seconds: Option<f32>,
 ) -> CarBundle {
     return CarBundle {
         scene: SceneBundle {
@@ -64,7 +62,7 @@ pub fn get_car_bundle(
         velocity: Velocity(velocity.unwrap_or(0.0f32)),
         acceleration: Acceleration(acceleration.unwrap_or(0.0f32)),
         reaction_timer: ReactionTimer(Timer::from_seconds(
-            REACTION_TIME_IN_SECONDS,
+            reaction_time_in_seconds.unwrap_or(0.4),
             TimerMode::Once,
         )),
         is_breaking: IsBreaking(false),
@@ -164,7 +162,9 @@ fn should_break(
     if before_traffic_light {
         match current_traffic_light {
             Light::RedLight => {
-                if  position + minimum_distance_to_stop + BREAK_DISTANCE >= traffic_light_position.translation.z {
+                if position + minimum_distance_to_stop + BREAK_DISTANCE
+                    >= traffic_light_position.translation.z
+                {
                     return true;
                 }
                 return false;

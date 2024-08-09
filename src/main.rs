@@ -29,13 +29,17 @@ fn main() {
         // UI
         .add_systems(Startup, ui_components::setup)
         .add_systems(Update, ui_components::reset_simulation_button::update)
-        .add_systems(Update, ui_components::reaction_timer_controls::update)
+        .add_systems(Update, ui_components::reaction_timer_controls::buttons_listenerr)
         .add_systems(Update, ui_components::buttons_hover_effect::update)
         // Simulation Reset
         .add_event::<ui_components::reset_simulation_button::ResetSimluation>()
         .add_systems(Update, camera::reset_simulation_listener)
         .add_systems(Update, car_fleet::reset_simulation_listener)
         .add_systems(Update, traffic_light::reset_simulation_listener)
+        // Reaction Time Modification
+        .add_event::<ui_components::reaction_timer_controls::ReactionTimeChanged>()
+        .add_systems(Update, car_fleet::reaction_time_changes_listener)
+        .add_systems(Update, ui_components::reaction_timer_controls::update_reaction_time_text)
         .run();
 }
 

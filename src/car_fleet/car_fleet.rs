@@ -1,4 +1,11 @@
-use crate::{traffic_light::CurrentLight, ui_components::reset_simulation_button::ResetSimluation};
+use std::time::Duration;
+
+use crate::{
+    traffic_light::CurrentLight,
+    ui_components::{
+        reaction_timer_controls::ReactionTimeChanged, reset_simulation_button::ResetSimluation,
+    },
+};
 use bevy::prelude::{EventReader, Without};
 
 use super::car::{self, get_car_bundle, Acceleration, Car, IsBreaking, ReactionTimer, Velocity};
@@ -17,6 +24,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             scene.clone(),
             Transform::from_xyz(0.0, 0.0, -10.0 * i as f32),
             //.with_rotation(Quat::from_rotation_y(std::f32::consts::PI)),
+            None,
             None,
             None,
         ));
@@ -77,6 +85,20 @@ pub fn reset_simulation_listener(
             *car.3 = Acceleration(0.0);
             (car.4 .0).reset();
             *car.5 = IsBreaking(false);
+        }
+    }
+}
+
+pub fn reaction_time_changes_listener(
+    mut reaction_time_changed_event: EventReader<ReactionTimeChanged>,
+    mut query: Query<(&Car, &mut ReactionTimer)>,
+) {
+    for e in reaction_time_changed_event.read() {
+        // At the  moment we change all the cars' reaction time
+        for mut car in query.iter_mut() {
+            let current_reaction_time = car.1 .0.duration().as_secs_f32();
+            let reaction_timer = &mut car.1 .0;
+            reaction_timer.set_duration(Duration::from_secs_f32(current_reaction_time + e.delta));
         }
     }
 }
