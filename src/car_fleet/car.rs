@@ -119,7 +119,8 @@ pub fn apply_movement(
 }
 
 fn calculate_stopping_distance(current_velocity: f32) -> f32 {
-    (-current_velocity.powi(2)) / (2.0 * SLOW_DOWN_ACCELERATION)
+    // I'm adding  0.1 to the stopping distance to avoid it being 0
+    0.1 + (-current_velocity.powi(2)) / (2.0 * SLOW_DOWN_ACCELERATION)
 }
 
 fn get_car_infront_z_position(
@@ -158,7 +159,7 @@ fn should_break(
         None => {}
     }
     let before_traffic_light: bool =
-        (traffic_light_position.translation.z - position + BREAK_DISTANCE) > 0.0;
+        position + BREAK_DISTANCE <= traffic_light_position.translation.z;
     if before_traffic_light {
         match current_traffic_light {
             Light::RedLight => {
