@@ -98,7 +98,10 @@ pub fn reaction_time_changes_listener(
         for mut car in query.iter_mut() {
             let current_reaction_time = car.1 .0.duration().as_secs_f32();
             let reaction_timer = &mut car.1 .0;
-            reaction_timer.set_duration(Duration::from_secs_f32(current_reaction_time + e.delta));
+            let new_reaction_time = current_reaction_time + e.delta;
+            if new_reaction_time > 0.0 {
+                reaction_timer.set_duration(Duration::from_secs_f32(new_reaction_time));
+            }
         }
     }
 }
